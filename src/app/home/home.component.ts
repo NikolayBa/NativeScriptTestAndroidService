@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import * as app from "tns-core-modules/application/application";
+import * as app from "tns-core-modules/application";
 import { device } from "tns-core-modules/platform";
 import * as utils from "tns-core-modules/utils/utils";
 declare var com: any;
@@ -38,15 +38,18 @@ export class HomeComponent implements OnInit {
     }
 
     registerBroadCastReceiver(){
-        var that = this;
+
+        const cb = (<any>android.content.BroadcastReceiver).extend({
+            onReceive: (context, data) => {
+                console.log("test-message receieved");
+              }
+            }
+        );
+
+        var _onReceivedCallback = new cb();
+        var broadcastManager = android.support.v4.content.LocalBroadcastManager.getInstance(utils.ad.getApplicationContext());
+        broadcastManager.registerReceiver(_onReceivedCallback,  new android.content.IntentFilter("test-message"))
+
         console.log("Registration Completed");
-        
-        app.android.registerBroadcastReceiver("customservice",
-            (androidContext, intent) => {
-                console.log("________________________________________________Data Received");
-                that.data = intent.getIntExtra("message",-1/*default value*/);
-                console.log("Data + " + that.data);
-        });
-        
     }
 }

@@ -73,7 +73,7 @@ export class TestAndroidService
    
    sendMessage(message) {
         console.log("message supposed to be sent from Service via broadcast " + message);
-        let intent = new android.content.Intent("customservice");
+        const intent = new android.content.Intent("test-message");
         var broadcastManager = android.support.v4.content.LocalBroadcastManager.getInstance(utils.ad.getApplicationContext());
         broadcastManager.sendBroadcast(intent);
     }
